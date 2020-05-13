@@ -4,6 +4,13 @@ version = "0.1.0"
 authors = ["sam <sunhaoyl@outlook.com>"]
 edition = "2018"
 description = "Rust binding for libtcc"
-links="tcc"
+links = "tcc"
+license = "MIT"
+homepage = "https://github.com/SunHao-0/libtcc"
+readme = "README.md"
+repository = "https://github.com/SunHao-0/libtcc"
+keywords = ["tcc", "jit", "ffi"]
+build = "build.rs"
+categories = ["external-ffi-bindings", "api-bindings"]
 
 [dependencies]
