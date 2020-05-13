@@ -308,6 +308,7 @@ impl Drop for RelocatedCtx {
     }
 }
 
+#[allow(clippy::string_lit_as_bytes)]
 #[cfg(test)]
 mod tests {
     use super::*;
