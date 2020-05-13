@@ -12,5 +12,14 @@ repository = "https://github.com/SunHao-0/libtcc"
 keywords = ["tcc", "jit", "ffi"]
 build = "build.rs"
 categories = ["external-ffi-bindings", "api-bindings"]
+documentation = "https://docs.rs/libtcc/"
+exclude = [".gitignore", ".github/**"]
+
+[badges]
+codecov = { repository = "SunHao-0/libtcc", branch = "master", service = "github" }
 
 [dependencies]
+
+
+[profile.release]
+opt-level = 3
