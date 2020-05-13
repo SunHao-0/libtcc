@@ -1,4 +1,5 @@
 #![allow(clippy::type_complexity, clippy::should_implement_trait)]
+#![deny(missing_docs)]
 //! Rust binding for [tcc](https://repo.or.cz/w/tinycc.git)
 
 /// libtcc.h itself is cross-platform, so no need for runtime generating
@@ -115,8 +116,8 @@ impl<'a, 'b> Context<'a, 'b> {
 
     /// set error/warning display callback
     pub fn set_call_back<T>(&mut self, f: T) -> &mut Self
-        where
-            T: FnMut(&CStr) + 'b,
+    where
+        T: FnMut(&CStr) + 'b,
     {
         let mut user_err_func: Box<Box<dyn FnMut(&CStr)>> = Box::new(Box::new(f));
         // user_err_func.as_mut().
@@ -206,8 +207,7 @@ impl<'a, 'b> Context<'a, 'b> {
         assert_eq!(ret, 0);
     }
 
-    /// TODO add output to file
-    ///
+    /// output an executable, library or object file.
     pub fn output_file<T: AsRef<Path>>(self, file_name: T) -> Result<(), ()> {
         let file_name = to_cstr(file_name);
         let ret = unsafe { tcc_output_file(self.inner, file_name.as_ptr()) };
@@ -291,19 +291,6 @@ impl Drop for RelocatedCtx {
     }
 }
 
-// pub unsafe  fn run(g:&mut Guard, p: &CStr, argv:&[&'static CStr]) -> Result<c_int, &'static str>{
-//     let mut compile_failed = None;
-//     let mut ctx = Context::new(g).map_err(|_|{"Fail to create compilation context"})?;
-//     ctx.set_output_type(OutputType::Memory)
-//         .set_call_back(|msg|{
-//             compile_failed = Some(String::from(msg.to_str().map_err(|e|)))
-//         })
-//         .compile_string(p)?;
-//
-//
-//     todo!()
-// }
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -368,9 +355,9 @@ mod tests {
         typedef __unknown_type a1;
         #endif
         "#
-                .as_bytes(),
+            .as_bytes(),
         )
-            .unwrap();
+        .unwrap();
         let sym = CString::new("TEST".as_bytes()).unwrap();
         let val = CString::new("1".as_bytes()).unwrap();
         let mut g = Guard::new().unwrap();
@@ -391,9 +378,9 @@ mod tests {
             return 0;
         }
         "#
-                .as_bytes(),
+            .as_bytes(),
         )
-            .unwrap();
+        .unwrap();
 
         let mut g = Guard::new().unwrap();
         let mut ctx = Context::new(&mut g).unwrap();
@@ -414,9 +401,9 @@ mod tests {
             return a+b;
         }
         "#
-                .as_bytes(),
+            .as_bytes(),
         )
-            .unwrap();
+        .unwrap();
 
         let mut g = Guard::new().unwrap();
         let mut ctx = Context::new(&mut g).unwrap();
@@ -437,9 +424,9 @@ mod tests {
             return a+b;
         }
         "#
-                .as_bytes(),
+            .as_bytes(),
         )
-            .unwrap();
+        .unwrap();
 
         let mut g = Guard::new().unwrap();
         let mut ctx = Context::new(&mut g).unwrap();
@@ -460,9 +447,9 @@ mod tests {
             return a+b;
         }
         "#
-                .as_bytes(),
+            .as_bytes(),
         )
-            .unwrap();
+        .unwrap();
         let sym = CString::new("add".as_bytes()).unwrap();
 
         let mut g = Guard::new().unwrap();
@@ -484,9 +471,9 @@ mod tests {
             return a+b;
         }
         "#
-                .as_bytes(),
+            .as_bytes(),
         )
-            .unwrap();
+        .unwrap();
         let sym = CString::new("add".as_bytes()).unwrap();
         let p2 = CString::new(
             r#"
@@ -495,9 +482,9 @@ mod tests {
             return add(a, b) + add(a, b);
         }
         "#
-                .as_bytes(),
+            .as_bytes(),
         )
-            .unwrap();
+        .unwrap();
         let sym2 = CString::new("add2".as_bytes()).unwrap();
 
         let mut g = Guard::new().unwrap();
@@ -528,9 +515,9 @@ mod tests {
             return a+b;
         }
         "#
-                .as_bytes(),
+            .as_bytes(),
         )
-            .unwrap();
+        .unwrap();
 
         let mut g = Guard::new().unwrap();
         let mut ctx = Context::new(&mut g).unwrap();
@@ -547,9 +534,9 @@ mod tests {
             return add(a, b) + add(a, b);
         }
         "#
-                .as_bytes(),
+            .as_bytes(),
         )
-            .unwrap();
+        .unwrap();
         let lib_name = CString::new("add".as_bytes()).unwrap();
         let sym2 = CString::new("add2".as_bytes()).unwrap();
         let mut ctx2 = Context::new(&mut g).unwrap();
