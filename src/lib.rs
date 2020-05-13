@@ -1,7 +1,24 @@
 #![allow(clippy::type_complexity, clippy::should_implement_trait)]
 #![deny(missing_docs)]
 //! Rust binding for [tcc](https://repo.or.cz/w/tinycc.git)
-
+//!
+//! # Example
+//! ```
+//! use libtcc::{Guard, Context, OutputType};
+//! use std::ffi::CString;
+//! let p = CString::new(r#"
+//!     #include<stdio.h>
+//!     int main(int argc, char** argv){
+//!         printf("hello world\n");
+//!     }
+//!     "#.as_bytes()).unwrap();
+//! let mut err_warn = None;
+//! let mut g = Guard::new().unwrap();
+//! let mut ctx = Context::new(&mut g).unwrap();
+//! ctx.set_output_type(OutputType::Memory)
+//!    .set_call_back(|msg| err_warn = Some(String::from(msg.to_str().unwrap())));
+//! assert!(ctx.compile_string(&p).is_ok());
+//! ```
 /// libtcc.h itself is cross-platform, so no need for runtime generating
 #[allow(dead_code)]
 mod binding;
