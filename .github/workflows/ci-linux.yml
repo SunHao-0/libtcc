@@ -73,7 +73,7 @@ jobs:
         if: matrix.version == 'stable' && (github.ref == 'refs/heads/master' || github.event_name == 'pull_request')
         run: |
           cargo install cargo-tarpaulin
-          cargo tarpaulin --out Xml -- --skip=test_stream_timeout --skip=test_message_timeout --skip=test_restart_sync_actor
+          cargo tarpaulin --out Xml -- --test-threads=1
       
       - name: Upload to Codecov
         if: matrix.version == 'stable' && (github.ref == 'refs/heads/master' || github.event_name == 'pull_request')
