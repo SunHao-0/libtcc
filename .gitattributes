@@ -1,4 +1,4 @@
 *.c linguist-detectable=false
 *.h linguist-detectable=false
 *.S linguist-detectable=false
-src/tcc/* linguist-vendored
+src/tcc-0.9.27/* linguist-vendored

@@ -2,12 +2,12 @@ coverage:
   status:
     project:
       default:
-        threshold: 100% # make CI green anyway
+        threshold: 100%
     patch:
       default:
-        threshold: 100% # make CI green anyway
+        threshold: 100%
 
-ignore: # ignore codecoverage on following paths
-  - "src/tcc"
-  - "examples"
-  - ".github"
+ignore:
+- "src/tcc-0.9.27"
+- "examples"
+- ".github"

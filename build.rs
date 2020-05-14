@@ -52,7 +52,7 @@ fn main() {
 }
 
 fn build_tcc(config_arg: Option<&[&str]>, make_arg: Option<&[&str]>) {
-    let tcc_src = env::current_dir().unwrap().join("src/tcc");
+    let tcc_src = env::current_dir().unwrap().join("src/tcc-0.9.21");
     let out_dir = PathBuf::from(env::var("OUT_DIR").unwrap());
     let build_dir = out_dir.join("build");
 
@@ -121,7 +121,7 @@ fn tcc_installed() -> bool {
     cmd.arg("src/libtcc_test.c")
         .arg("-o")
         .arg(tcc_tmp.join("a.out"))
-        .arg("-Isrc/tcc")
+        .arg("-Isrc/tcc-0.9.21")
         .arg("-ltcc")
         .arg("-ldl");
     println!("running {:?}", cmd);
