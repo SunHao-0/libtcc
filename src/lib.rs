@@ -8,9 +8,8 @@
 //! use libtcc::{Guard, Context, OutputType};
 //! use std::ffi::CString;
 //! let p = CString::new(r#"
-//!     #include<stdio.h>
-//!     int main(int argc, char** argv){
-//!         printf("hello world\n");
+//!     int add(int a, int b){
+//!         return a+b;
 //!     }
 //!     "#.as_bytes()).unwrap();
 //! let mut g = Guard::new().unwrap();
