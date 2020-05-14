@@ -1,7 +1,7 @@
 use libtcc::*;
 use std::ffi::{CStr, CString};
-use std::intrinsics::transmute;
 use std::process::exit;
+use std::mem::transmute;
 
 static GREET: &str = r#"
 #include <stdio.h>
