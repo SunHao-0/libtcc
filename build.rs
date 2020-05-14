@@ -118,7 +118,7 @@ fn tcc_installed() -> bool {
     }
     let compiler = cfg.get_compiler();
     let mut cmd = Command::new(compiler.path());
-    cmd.arg("src/tcc/tests/libtcc_test.c")
+    cmd.arg("src/libtcc_test.c")
         .arg("-o")
         .arg(tcc_tmp.join("a.out"))
         .arg("-Isrc/tcc")
