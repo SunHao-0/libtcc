@@ -18,7 +18,7 @@ To use `libtcc`, add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-libtcc = "0.1.1"
+libtcc = "0.2.0"
 ```
 
 ### Install tcc
