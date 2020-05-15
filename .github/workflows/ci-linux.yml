@@ -20,10 +20,8 @@ jobs:
      
       - name: deps
         run: sudo apt update && sudo apt install gcc-multilib g++-multilib
-      
-      - name: tcc-0.9.27
-        run: git clone https://github.com/TinyCC/tinycc.git tcc  && cd tcc && ./configure && make && sudo make install && cd ../
- 
+#      - name: tcc-0.9.27
+#        run: git clone https://github.com/TinyCC/tinycc.git tcc  && cd tcc && ./configure && make && sudo make install && cd ../
  
       - name: Install ${{ matrix.version }}
         uses: actions-rs/toolchain@v1
