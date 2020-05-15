@@ -19,7 +19,7 @@ jobs:
       - uses: actions/checkout@master
      
       - name: deps
-        run: sudo apt update && sudo apt install gcc-multilib g++-multilib
+        run: sudo apt update && sudo apt install gcc-multilib g++-multilib libgcc1
 #      - name: tcc-0.9.27
 #        run: git clone https://github.com/TinyCC/tinycc.git tcc  && cd tcc && ./configure && make && sudo make install && cd ../
  
