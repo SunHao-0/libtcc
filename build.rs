@@ -34,22 +34,23 @@ fn main() {
             "--enable-static",
             "--enable-cross",
             "--extra-cflags=-fPIC -O3 -g -static",
-            "--with-libgcc",
         ];
         let make_args = ["libtcc.a"];
+        println!("WARN: Cross compiling, tcc should be installed in your target env");
         println!("Cross: configure {:?}, make {:?}", config_args, make_args);
         build_tcc(Some(&config_args), Some(&make_args));
     } else if !tcc_installed() {
-        let config_args = [
-            "--enable-static",
-            "--extra-cflags=-fPIC -O3 -g -static ",
-            "--with-libgcc",
-        ];
-        println!("Building: configure {:?}, make", config_args);
-        build_tcc(Some(&config_args), None);
+        eprintln!("Tcc should be installed in host when your build target is same as host, \
+        because libtcc need some small but necessary runtime libaray such as libtcc1.a and some header files, \
+        which should be found in [prefix]/lib/tcc");
+        exit(1);
     } else {
-        println!("Using installed libtcc");
-        println!("cargo:rustc-link-search=native=/usr/local/lib");
+        if target.contains("linux") {
+            println!("cargo:rustc-link-search=native=/usr/local/lib");
+        }
+        if let Ok(path) = env::var("LIB_TCC") {
+            println!("cargo:rustc-link-search=native={}", path);
+        }
     }
 
     println!("cargo:rustc-link-lib=static=tcc");
@@ -59,20 +60,9 @@ fn main() {
 fn build_tcc(config_arg: Option<&[&str]>, make_arg: Option<&[&str]>) {
     let tcc_src = env::current_dir().unwrap().join("src/tcc-0.9.27");
     let out_dir = PathBuf::from(env::var("OUT_DIR").unwrap());
-    let build_dir = out_dir.join("build");
-
-    if let Err(e) = create_dir(&build_dir) {
-        if let ErrorKind::AlreadyExists = e.kind() {
-        } else {
-            eprintln!("Fail to creat build dir:{}", build_dir.display());
-            exit(1);
-        }
-    }
 
     let mut configure = Command::new(tcc_src.join("configure"));
-    configure
-        .arg(format!("--prefix={}", out_dir.display()))
-        .current_dir(&build_dir);
+    configure.current_dir(&out_dir);
     if let Some(args) = config_arg {
         configure.args(args);
     }
@@ -83,7 +73,7 @@ fn build_tcc(config_arg: Option<&[&str]>, make_arg: Option<&[&str]>) {
     }
 
     let mut make = Command::new("make");
-    make.current_dir(&build_dir).arg(format!(
+    make.current_dir(&out_dir).arg(format!(
         "-j{}",
         env::var("NUM_JOBS").unwrap_or_else(|_| String::from("1"))
     ));
@@ -97,16 +87,7 @@ fn build_tcc(config_arg: Option<&[&str]>, make_arg: Option<&[&str]>) {
         exit(1);
     }
 
-    let install_status = Command::new("make")
-        .current_dir(&build_dir)
-        .arg("install")
-        .status()
-        .unwrap();
-    if !install_status.success() {
-        eprintln!("Fail to install: {:?}", install_status);
-        exit(1);
-    }
-    println!("cargo:rustc-link-search=native={}/lib", out_dir.display());
+    println!("cargo:rustc-link-search=native={}", out_dir.display());
     println!("cargo:rerun-if-changed={}", tcc_src.display());
 }
 
