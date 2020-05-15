@@ -40,9 +40,10 @@ fn main() {
         println!("Cross: configure {:?}, make {:?}", config_args, make_args);
         build_tcc(Some(&config_args), Some(&make_args));
     } else if !tcc_installed() {
-        eprintln!("Tcc should be installed in host when your build target is same as host, \
-        because libtcc need some small but necessary runtime libaray such as libtcc1.a and some header files, \
-        which should be found in [prefix]/lib/tcc");
+        eprintln!("ERROR: Can not find libtcc.a in your host:");
+        eprintln!("\tTcc should be installed in host when your build target is same as host, \n\
+                   \tbecause libtcc need some small but necessary runtime libaray such as libtcc1.a\n\
+                   \tand some header files, which should be found in [prefix]/lib/tcc");
         exit(1);
     } else {
         if target.contains("linux") {
@@ -96,8 +97,7 @@ fn tcc_installed() -> bool {
     let out = PathBuf::from(env::var("OUT_DIR").unwrap());
     let tcc_tmp = out.join("tcc-tmp");
     if let Err(e) = create_dir(&tcc_tmp) {
-        if let ErrorKind::AlreadyExists = e.kind() {
-        } else {
+        if let ErrorKind::AlreadyExists = e.kind() {} else {
             eprintln!("Fail to creat build dir:{}", tcc_tmp.display());
             exit(1);
         }
@@ -109,7 +109,10 @@ fn tcc_installed() -> bool {
         .arg(tcc_tmp.join("a.out"))
         .arg("-Isrc/tcc-0.9.27")
         .arg("-ltcc")
-        .arg("-ldl");
+        .arg("-ldl")
+        .arg("-lrt")
+        .arg("-lm")
+        .arg("-lpthread");
     println!("running {:?}", cmd);
     if let Ok(status) = cmd.status() {
         if status.success() {
