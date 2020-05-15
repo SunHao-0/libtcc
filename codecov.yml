@@ -11,3 +11,4 @@ ignore:
 - "src/tcc-0.9.27"
 - "examples"
 - ".github"
+- "build.rs"
