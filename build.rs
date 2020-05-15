@@ -33,13 +33,18 @@ fn main() {
             &cpu[..],
             "--enable-static",
             "--enable-cross",
-            "--extra-cflags=-fPIC -O3 -g",
+            "--extra-cflags=-fPIC -O3 -g -static",
+            "--with-libgcc",
         ];
         let make_args = ["libtcc.a"];
         println!("Cross: configure {:?}, make {:?}", config_args, make_args);
         build_tcc(Some(&config_args), Some(&make_args));
     } else if !tcc_installed() {
-        let config_args = ["--enable-static", "--extra-cflags=-fPIC -O3 -g"];
+        let config_args = [
+            "--enable-static",
+            "--extra-cflags=-fPIC -O3 -g -static ",
+            "--with-libgcc",
+        ];
         println!("Building: configure {:?}, make", config_args);
         build_tcc(Some(&config_args), None);
     } else {
