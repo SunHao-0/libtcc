@@ -9,7 +9,7 @@ Rust binding for [tcc](https://github.com/TinyCC/tinycc).
 * Cargo package: [libtcc](https://crates.io/crates/libtcc)
 
 TinyCC (or tcc) is short for Tiny C Compiler. It's a SMALL, FAST, UNLIMITED,SAFE C language Compiler.
-Thid crate provide a safe wrapper for libtcc, which supports jit compilation and low level control of 
+This crate provide a safe wrapper for libtcc, which supports jit compilation and low level control of 
 code generation.
 
 ## Usage
@@ -20,6 +20,14 @@ To use `libtcc`, add this to your `Cargo.toml`:
 [dependencies]
 libtcc = "0.1.1"
 ```
+
+### Install tcc
+Although this crate take `tcc` as part of itself, you still need to install tcc on your env. 
+The reasons are:
+1. libtcc.a need small but necessary runtime library(such as libtcc1.a) and some header files defined 
+by tcc(such as stddef.h)
+2. The purpose of using tcc as part of this crate is to support cross compilation, you still need tcc to 
+be installed in your target env and installation of tcc in target env should not change install prefix.
 
 ### Initialize Guard
 Tcc uses global variable during one compilation, which means user can not compile programs simultaneously.
