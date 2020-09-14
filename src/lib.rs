@@ -257,7 +257,11 @@ impl<'a, 'b> Context<'a, 'b> {
 }
 
 fn to_cstr<T: AsRef<Path>>(p: T) -> CString {
+    #[cfg(target_family = "unix")]
     use std::os::unix::ffi::OsStrExt;
+    #[cfg(target_family = "windows")]
+    use std::os::windows::ffi::OsStrExt;
+
     CString::new(p.as_ref().as_os_str().as_bytes()).unwrap()
 }
 
