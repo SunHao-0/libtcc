@@ -119,7 +119,8 @@ fn tcc_installed() -> bool {
         .arg("-ltcc")
         .arg("-ldl")
         .arg("-lrt")
-        .arg("-lm");
+        .arg("-lm")
+        .arg("-lpthread");
     println!("running {:?}", cmd);
     if let Ok(status) = cmd.status() {
         if status.success() {
