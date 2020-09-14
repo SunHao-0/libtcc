@@ -531,6 +531,7 @@ mod tests {
     }
 
     #[test]
+    #[cfg(not(target_env = "msvc"))]
     fn link_lib() {
         let p = CString::new(
             r#"
