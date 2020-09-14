@@ -256,13 +256,15 @@ impl<'a, 'b> Context<'a, 'b> {
     }
 }
 
+#[cfg(target_family = "unix")]
 fn to_cstr<T: AsRef<Path>>(p: T) -> CString {
-    #[cfg(target_family = "unix")]
     use std::os::unix::ffi::OsStrExt;
-    #[cfg(target_family = "windows")]
-    use std::os::windows::ffi::OsStrExt;
-
     CString::new(p.as_ref().as_os_str().as_bytes()).unwrap()
+}
+
+#[cfg(target_family = "windows")]
+fn to_cstr<T: AsRef<Path>>(p: T) -> CString {
+    CString::new(p.as_ref().to_string_lossy().to_string().as_bytes()).unwrap()
 }
 
 // preprocessor
