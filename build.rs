@@ -54,8 +54,13 @@ fn main() {
         }
     }
 
-    println!("cargo:rustc-link-lib=static=tcc");
+    if target.contains("msvc") {
+        println!("cargo:rustc-link-lib=static=libtcc");
+    } else {
+        println!("cargo:rustc-link-lib=static=tcc");
+    }
     println!("cargo:rerun-if-changed=build.rs");
+    println!("cargo:rerun-if-env-changed=LIB_TCC");
 }
 
 fn build_tcc(config_arg: Option<&[&str]>, make_arg: Option<&[&str]>) {
