@@ -54,8 +54,13 @@ fn main() {
         }
     }
 
-    println!("cargo:rustc-link-lib=static=tcc");
+    if target.contains("msvc") {
+        println!("cargo:rustc-link-lib=static=libtcc");
+    } else {
+        println!("cargo:rustc-link-lib=static=tcc");
+    }
     println!("cargo:rerun-if-changed=build.rs");
+    println!("cargo:rerun-if-env-changed=LIB_TCC");
 }
 
 fn build_tcc(config_arg: Option<&[&str]>, make_arg: Option<&[&str]>) {
@@ -93,11 +98,19 @@ fn build_tcc(config_arg: Option<&[&str]>, make_arg: Option<&[&str]>) {
 }
 
 fn tcc_installed() -> bool {
+    if cfg!(target_os = "windows") {
+        eprintln!(
+            "WARN: compiling libtcc on windows, make sure tcc is built and installed correctly"
+        );
+        return true;
+    }
+
     let cfg = cc::Build::new();
     let out = PathBuf::from(env::var("OUT_DIR").unwrap());
     let tcc_tmp = out.join("tcc-tmp");
     if let Err(e) = create_dir(&tcc_tmp) {
-        if let ErrorKind::AlreadyExists = e.kind() {} else {
+        if let ErrorKind::AlreadyExists = e.kind() {
+        } else {
             eprintln!("Fail to creat build dir:{}", tcc_tmp.display());
             exit(1);
         }
