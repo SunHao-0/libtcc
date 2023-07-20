@@ -3,7 +3,7 @@
 ![codecov](https://codecov.io/gh/SunHao-0/libtcc/branch/master/graph/badge.svg) 
 [![crate.io](https://img.shields.io/crates/v/libtcc)](https://crates.io/crates/libtcc)
 
-Rust binding for [tcc](https://github.com/TinyCC/tinycc).
+Rust binding for [tinycc](https://github.com/TinyCC/tinycc).
 
 * [API Documentation (Releases)](https://docs.rs/libtcc/)
 * Cargo package: [libtcc](https://crates.io/crates/libtcc)
@@ -22,14 +22,17 @@ libtcc = "0.2.0"
 ```
 
 ### Install tcc
+
 Although this crate take `tcc` as part of itself, you still need to install tcc on your env. 
 The reasons are:
-1. libtcc.a need small but necessary runtime library(such as libtcc1.a) and some header files defined 
-by tcc(such as stddef.h)
+1. libtcc.a need small but necessary runtime library, e.g., libtcc1.a, and some header files defined by tcc, e.g., stddef.h.
 2. The purpose of using tcc as part of this crate is to support cross compilation, you still need tcc to 
 be installed in your target env and installation of tcc in target env should not change install prefix.
 
+**NOTE: glibc before 2.34 is required for building libtcc-0.9.27, see [here](https://github.com/SunHao-0/libtcc/pull/5).**
+
 ### Initialize Guard
+
 Tcc uses global variable during one compilation, which means user can not compile programs simultaneously.
 To prevent incorrect usage, we provide `Guard`. Only one guard can exist in a specific scope and every instance 
 of tcc hold a mutable reference to a guard so that rust compiler can detects incorrect usage via borrow checker.
