@@ -8,12 +8,11 @@ jobs:
       fail-fast: false
       matrix:
         version:
-          - 1.40.0 
           - stable
           - nightly
 
     name: ${{ matrix.version }} - x86_64-unknown-linux-gnu
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     steps:
       - uses: actions/checkout@master
@@ -22,7 +21,7 @@ jobs:
         run: sudo apt update && sudo apt install gcc-multilib g++-multilib
 
       - name: install-tcc-0.9.27
-        run: git clone https://github.com/TinyCC/tinycc.git tcc  && cd tcc && ./configure && make && sudo make install && cd ../
+        run: git clone https://github.com/TinyCC/tinycc.git tcc && cd tcc && git checkout tags/release_0_9_27 -b release_0_9_27 && ./configure && make && sudo make install && cd ../
  
       - name: Install ${{ matrix.version }}
         uses: actions-rs/toolchain@v1
