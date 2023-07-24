@@ -1,6 +1,6 @@
 name: CI (Linux)
 
-on: [push, pull_request]
+on: [push, pull_request ]
 
 jobs:
   build_and_test:
@@ -16,13 +16,13 @@ jobs:
 
     steps:
       - uses: actions/checkout@master
-     
+
       - name: install-deps
         run: sudo apt update && sudo apt install gcc-multilib g++-multilib
 
       - name: install-tcc-0.9.27
         run: git clone https://github.com/TinyCC/tinycc.git tcc && cd tcc && git checkout tags/release_0_9_27 -b release_0_9_27 && ./configure && make && sudo make install && cd ../
- 
+
       - name: Install ${{ matrix.version }}
         uses: actions-rs/toolchain@v1
         with:
@@ -34,25 +34,25 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: generate-lockfile
-      
+
       - name: Cache cargo registry
         uses: actions/cache@v1
         with:
           path: ~/.cargo/registry
           key: ${{ matrix.version }}-x86_64-unknown-linux-gnu-cargo-registry-trimmed-${{ hashFiles('**/Cargo.lock') }}
-      
+
       - name: Cache cargo index
         uses: actions/cache@v1
         with:
           path: ~/.cargo/git
           key: ${{ matrix.version }}-x86_64-unknown-linux-gnu-cargo-index-trimmed-${{ hashFiles('**/Cargo.lock') }}
-      
+
       - name: Cache cargo build
         uses: actions/cache@v1
         with:
           path: target
           key: ${{ matrix.version }}-x86_64-unknown-linux-gnu-cargo-build-trimmed-${{ hashFiles('**/Cargo.lock') }}
-      
+
 
       - name: check build
         uses: actions-rs/cargo@v1
@@ -72,7 +72,7 @@ jobs:
         run: |
           cargo install cargo-tarpaulin
           cargo tarpaulin --out Xml -- --test-threads=1
-      
+
       - name: Upload to Codecov
         if: matrix.version == 'stable' && (github.ref == 'refs/heads/master' || github.event_name == 'pull_request')
         uses: codecov/codecov-action@v1
