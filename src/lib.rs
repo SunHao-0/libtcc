@@ -232,25 +232,15 @@ impl<'a, 'b> Context<'a, 'b> {
 
     /// do all relocations (needed before get symbol)
     pub fn relocate(mut self) -> Result<RelocatedCtx, ()> {
-        // pass null ptr to get required length
-        let len = unsafe { tcc_relocate(self.inner, null_mut()) };
-        if len == -1 {
-            return Err(());
-        };
-        let mut bin = Vec::with_capacity(len as usize);
-        let ret = unsafe { tcc_relocate(self.inner, bin.as_mut_ptr() as *mut c_void) };
+        let ret = unsafe { tcc_relocate(self.inner, 1 as *mut c_void) };
         if ret != 0 {
             return Err(());
-        }
-        unsafe {
-            bin.set_len(len as usize);
         }
         let tcc_handle = self.inner;
         self.inner = null_mut();
 
         Ok(RelocatedCtx {
             inner: tcc_handle,
-            _bin: bin,
             phantom: PhantomData,
         })
     }
@@ -287,7 +277,6 @@ fn map_c_ret(code: c_int) -> Result<(), ()> {
 /// Relocated compilation context
 pub struct RelocatedCtx {
     inner: *mut TCCState,
-    _bin: Vec<u8>,
     phantom: PhantomData<TCCState>,
 }
 
